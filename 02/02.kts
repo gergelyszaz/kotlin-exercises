@@ -1,6 +1,7 @@
 println("hello")
 
 open class Fruit constructor(val _weight: Int, val _ripened: Boolean){
+    fun getWeight(): Int { return _weight}
     fun isRipened(): Boolean {return _ripened}
 }
 
@@ -16,14 +17,25 @@ class Cherry constructor(_weight: Int, _isRipened: Boolean, val _isSourCherry: B
 fun sort(fruits: List<Fruit>) : List<Fruit> {
     return fruits.sortedWith( Comparator<Fruit>{ x, y ->  
         when {
-           x.isRipened() -> -1
-           y.isRipened() -> 1
-           else -> -1
+            ( !x.isRipened() || !y.isRipened() )  -> 0;
+            x is Banana && y is Cherry -> -1
+            x is Cherry && y is Banana -> 1
+            x is Cherry && y is Cherry -> -x.isSourCherry().compareTo(y.isSourCherry())
+            x is Banana && y is Banana -> -x.isCookingBanana().compareTo(y.isCookingBanana())
+            else -> x.getWeight().compareTo(y.getWeight())
         }
     })
 }
 
 
-val fruits = listOf(Banana(6,false,true),Cherry(4,true,true))
+val fruits = listOf(
+    Cherry(10,true,false),
+    Banana(6,true,true),
+    Cherry(4,true,true),
+    Banana(5,true,true),
+    Banana(2,true,false)
+
+)
+println(fruits)
 println(sort(fruits))
 
